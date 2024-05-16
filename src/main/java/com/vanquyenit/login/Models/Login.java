@@ -1,23 +1,19 @@
-package com.vanquyenit.chatapplication.Models;
+package com.vanquyenit.login.Models;
 
-import com.vanquyenit.chatapplication.Controller.ChatController;
-import com.vanquyenit.chatapplication.Controller.ServerController;
+import com.vanquyenit.login.Controller.MainController;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import java.util.HashMap;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 
 public class Login {
     private Connection connection;
-
-    String usename;
 
     public Login() {
         connection = DataBase.getInstance().getConnection();
@@ -36,9 +32,7 @@ public class Login {
             ResultSet userResultSet = userStatement.executeQuery();
 
             if (userResultSet.next()) {
-                this.usename = username;
                 showChatWindow();
-                ServerController.receiveMessage(usename+" joined.");
                 return true;
             }
         } catch (SQLException e) {
@@ -49,19 +43,11 @@ public class Login {
     public void showChatWindow() {
 
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/ChatView.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/MainView.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
-            ChatController controller = loader.getController();
-            controller.setClientName(usename); // Set the parameter
-            loader.setController(controller);
+            stage.setTitle("Welcome");
             stage.setScene(new Scene(root));
-            stage.setTitle("Chat App");
-            stage.setResizable(false);
-            stage.centerOnScreen();
-            stage.setOnCloseRequest(windowEvent -> {
-                controller.shutdown();
-            });
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,7 +60,7 @@ public class Login {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/Views/SignUpView.fxml"));
             Parent root = loader.load();
             Stage stage = new Stage();
-            stage.setTitle("Chat App");
+            stage.setTitle("SignUp");
             stage.setScene(new Scene(root));
             stage.show();
         } catch (IOException e) {
